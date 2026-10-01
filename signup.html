@@ -14,10 +14,18 @@
             color: darkred;
             font-weight: bold;
         }
+        /* Style for the JSON display output */
+        pre {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #dee2e6;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
     </style>
 </head>
 <body>
-
 
     <header>
         <h1>Timeless Pages Bookstore</h1>
@@ -31,7 +39,8 @@
     <main class="container my-4">
         <h2 class="mb-4">User Signup</h2>
         
-        <form style="max-width: 500px;" onsubmit="return validateForm()">
+        <!-- Changed onsubmit to handle the event directly -->
+        <form style="max-width: 500px;" onsubmit="handleFormSubmit(event)">
             <div class="mb-3">
                 <label for="username" class="form-label">Username:</label>
                 <input type="text" class="form-control" id="username" placeholder="Enter username" onfocusout="validate(this)">
@@ -52,8 +61,18 @@
                 <input type="password" class="form-control" id="confirmPassword" placeholder="Enter confirm password" onfocusout="validate(this)">
             </div>
 
-            <button type="submit" class="btn btn-primary">Sign Up</button>
+            <div class="d-flex gap-2 mb-4">
+                <button type="submit" class="btn btn-primary">Sign Up</button>
+                <!-- Added Update button to match the project mockup requirements -->
+                <button type="button" class="btn btn-secondary" onclick="handleUpdateClick()">Update</button>
+            </div>
         </form>
+
+        <!-- Added JSON Container display area -->
+        <div id="jsonDisplayContainer" style="max-width: 500px; display: none;" class="mt-4">
+            <h5>Generated JSON Object:</h5>
+            <pre id="jsonOutput"></pre>
+        </div>
     </main>
 
     <aside>
@@ -104,6 +123,38 @@
             });
 
             return formValid;
+        }
+
+        // New function to collect fields, bundle into JSON, and show them on the page
+        function displayFieldsAsJSON() {
+            const signupData = {
+                username: document.getElementById("username").value,
+                email: document.getElementById("email").value,
+                password: document.getElementById("password").value,
+                confirmPassword: document.getElementById("confirmPassword").value
+            };
+
+            const jsonOutput = document.getElementById("jsonOutput");
+            const jsonDisplayContainer = document.getElementById("jsonDisplayContainer");
+
+            jsonOutput.textContent = JSON.stringify(signupData, null, 4);
+            jsonDisplayContainer.style.display = "block";
+        }
+
+        // Handles the standard form submission workflow safely
+        function handleFormSubmit(event) {
+            event.preventDefault(); // Stop page refresh
+            
+            if (validateForm()) {
+                displayFieldsAsJSON();
+            }
+        }
+
+        // Handles the 'Update' button click path
+        function handleUpdateClick() {
+            if (validateForm()) {
+                displayFieldsAsJSON();
+            }
         }
     </script>
 
